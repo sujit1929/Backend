@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
 
 // Create User Model (Collection Name is 'users')
 const User = mongoose.model("users", userSchema);
+//Hello mongo
 
 // MongoDB Connection
 mongoose
