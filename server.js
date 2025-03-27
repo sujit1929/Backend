@@ -7,13 +7,11 @@ const app = express();
 const port = 5000;
 
 // CORS configuration: Aap production mein frontend URL update kar sakte hain
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "http://localhost:3000", // Allow requests from your frontend
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+  credentials: true // Allow cookies if needed
+}));
 
 // JSON parsing middlewares
 app.use(express.json());
