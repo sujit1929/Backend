@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 
-// API to fetch all users
+// API to fetch all user
 app.get("/users", async (_req, res) => {
   try {
     const users = await User.find();
