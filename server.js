@@ -15,7 +15,7 @@ app.use(
   })
 );
 
-// JSON parsing middleware
+// JSON parsing middlewares
 app.use(express.json());
 
 // Mongoose connection using environment variable (MONGO_URI must be set in Vercel)
