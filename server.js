@@ -69,7 +69,7 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// API to register user(s)
+// API to register user(s)sujit
 app.post("/auth/sign-up", async (req, res) => {
   try {
     // Check if multiple users are sent as array
