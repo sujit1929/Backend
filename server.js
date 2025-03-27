@@ -69,37 +69,50 @@ app.get("/users/:id", async (req, res) => {
 // API to register user(s)
 app.post("/auth/sign-up", async (req, res) => {
   try {
-    // Check if multiple users are sent as array
     if (Array.isArray(req.body)) {
       const usersData = req.body;
       const insertedUsers = [];
+      const errors = [];
 
       for (const userData of usersData) {
         const { name, email, password, mobile } = userData;
 
         if (!name || !email || !password || !mobile) {
-          return res
-            .status(400)
-            .json({ message: "All fields are required for each user" });
+          errors.push({ email, message: "All fields are required for each user" });
+          continue;
         }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-          return res.status(400).json({ message: `Email ${email} already exists` });
+          errors.push({ email, message: `Email ${email} already exists` });
+          continue;
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword, mobile });
-        await user.save();
-        insertedUsers.push(user);
+        try {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const user = new User({ name, email, password: hashedPassword, mobile });
+          await user.save();
+          insertedUsers.push(user);
+        } catch (hashError) {
+          errors.push({ email, message: "Error hashing password" });
+        }
       }
 
-      return res
-        .status(201)
-        .json({ message: "✅ Users registered successfully!", users: insertedUsers });
+      if (errors.length > 0) {
+        return res.status(400).json({
+          message: "Some users failed to register",
+          errors,
+          users: insertedUsers,
+        });
+      }
+
+      return res.status(201).json({
+        message: "✅ Users registered successfully!",
+        users: insertedUsers,
+      });
     } else {
-      // Process single user registration
       const { name, email, password, mobile } = req.body;
+
       if (!name || !email || !password || !mobile) {
         return res.status(400).json({ message: "All fields are required" });
       }
@@ -113,16 +126,20 @@ app.post("/auth/sign-up", async (req, res) => {
       const user = new User({ name, email, password: hashedPassword, mobile });
       await user.save();
 
-      return res
-        .status(201)
-        .json({ message: "✅ User registered successfully!", user });
+      return res.status(201).json({
+        message: "✅ User registered successfully!",
+        user,
+      });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "❌ Internal Server Error", error: error.message });
+    console.error("Error in /auth/sign-up:", error);
+    return res.status(500).json({
+      message: "❌ Internal Server Error",
+      error: error.message,
+    });
   }
 });
+
 
 // API to login
 app.post("/login", async (req, res) => {
