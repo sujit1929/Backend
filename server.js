@@ -1,19 +1,21 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const cors = require("cors");
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // CORS configuration: Aap production mein frontend URL update kar sakte hain
-app.use(cors({
-  origin: "http://localhost:3000", // Allow requests from your frontend
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-  credentials: true // Allow cookies if needed
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-// JSON parsing middlewares
+// JSON parsing middleware
 app.use(express.json());
 
 // Mongoose connection using environment variable (MONGO_URI must be set in Vercel)
@@ -36,12 +38,13 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("users", userSchema);
 //Hello mongo
 
+// API to fetch all users
 app.get("/", (req, res) => {
-  res.send("Hello World yes");
-});
-
-
-// API to fetch all user
+  res.send("Hello World!");
+})
+app.get("/auth/sign-up", (req, res) => {
+  res.send("Hello World! from sign-up");
+})
 app.get("/users", async (_req, res) => {
   try {
     const users = await User.find();
@@ -69,50 +72,37 @@ app.get("/users/:id", async (req, res) => {
 // API to register user(s)
 app.post("/auth/sign-up", async (req, res) => {
   try {
+    // Check if multiple users are sent as array
     if (Array.isArray(req.body)) {
       const usersData = req.body;
       const insertedUsers = [];
-      const errors = [];
 
       for (const userData of usersData) {
         const { name, email, password, mobile } = userData;
 
         if (!name || !email || !password || !mobile) {
-          errors.push({ email, message: "All fields are required for each user" });
-          continue;
+          return res
+            .status(400)
+            .json({ message: "All fields are required for each user" });
         }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-          errors.push({ email, message: `Email ${email} already exists` });
-          continue;
+          return res.status(400).json({ message: `Email ${email} already exists` });
         }
 
-        try {
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const user = new User({ name, email, password: hashedPassword, mobile });
-          await user.save();
-          insertedUsers.push(user);
-        } catch (hashError) {
-          errors.push({ email, message: "Error hashing password" });
-        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = new User({ name, email, password: hashedPassword, mobile });
+        await user.save();
+        insertedUsers.push(user);
       }
 
-      if (errors.length > 0) {
-        return res.status(400).json({
-          message: "Some users failed to register",
-          errors,
-          users: insertedUsers,
-        });
-      }
-
-      return res.status(201).json({
-        message: "✅ Users registered successfully!",
-        users: insertedUsers,
-      });
+      return res
+        .status(201)
+        .json({ message: "✅ Users registered successfully!", users: insertedUsers });
     } else {
+      // Process single user registration
       const { name, email, password, mobile } = req.body;
-
       if (!name || !email || !password || !mobile) {
         return res.status(400).json({ message: "All fields are required" });
       }
@@ -126,20 +116,16 @@ app.post("/auth/sign-up", async (req, res) => {
       const user = new User({ name, email, password: hashedPassword, mobile });
       await user.save();
 
-      return res.status(201).json({
-        message: "✅ User registered successfully!",
-        user,
-      });
+      return res
+        .status(201)
+        .json({ message: "✅ User registered successfully!", user });
     }
   } catch (error) {
-    console.error("Error in /auth/sign-up:", error);
-    return res.status(500).json({
-      message: "❌ Internal Server Error",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "❌ Internal Server Error", error: error.message });
   }
 });
-
 
 // API to login
 app.post("/login", async (req, res) => {
@@ -216,4 +202,4 @@ app.delete("/users/:id", async (req, res) => {
 
 app.listen(port, () => {
   console.log(`🚀 Server is running at http://localhost:${port}`);
-});
+});  
