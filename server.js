@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const cors = require("cors");
 
 const app = express();
@@ -19,10 +19,12 @@ app.use(
 app.use(express.json());
 
 // Mongoose connection using environment variable (MONGO_URI must be set in Vercel)
+
 mongoose
-  .connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 })
+  .connect("mongodb+srv://Sujeet:mongo785999@cluster0.car0p.mongodb.net/?retryWrites=true&w=majority")
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ MongoDB Connection Error:", err));
+
 
 // Define User Schema
 const userSchema = new mongoose.Schema({
@@ -181,16 +183,16 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
-// Fallback route: Agar koi route match na kare toh 404 JSON return karein
-app.all("*", (req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
+// // Fallback route: Agar koi route match na kare toh 404 JSON return karein
+// app.all("*", (req, res) => {
+//   res.status(404).json({ message: "Route not found" });
+// });
 
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: "Internal Server Error", error: err.message });
-});
+// // Global error handler
+// app.use((err, req, res, next) => {
+//   console.error(err);
+//   res.status(500).json({ message: "Internal Server Error", error: err.message });
+// });
 
 app.listen(port, () => {
   console.log(`🚀 Server is running at http://localhost:${port}`);
