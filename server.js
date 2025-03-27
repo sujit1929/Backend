@@ -67,7 +67,7 @@ app.get("/users/:id", async (req, res) => {
 });
 
 // API to register user(s)
-app.post("/register", async (req, res) => {
+app.post("/auth/sign-up", async (req, res) => {
   try {
     // Check if multiple users are sent as array
     if (Array.isArray(req.body)) {
