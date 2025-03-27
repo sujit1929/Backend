@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 // CORS configuration: Aap production mein frontend URL update kar sakte hain
 app.use(
@@ -39,7 +39,7 @@ const User = mongoose.model("users", userSchema);
 //Hello mongo
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World yes");
 });
 
 
