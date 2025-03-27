@@ -39,7 +39,7 @@ const User = mongoose.model("users", userSchema);
 //Hello mongo
 
 app.get("/", (req, res) => {
-  res.send("Hello, World!");
+  res.send("Hello World");
 });
 
 
