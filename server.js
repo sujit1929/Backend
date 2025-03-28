@@ -130,7 +130,7 @@ app.post("/auth/sign-up", async (req, res) => {
 });
 
 // API to login
-app.post("/login", async (req, res) => {
+app.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
