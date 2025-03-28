@@ -28,6 +28,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ MongoDB Connection Error:", err));
+  console.log("mongo uri",process.env.MONGO_URI)
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
