@@ -7,25 +7,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // CORS configuration: Aap production mein frontend URL update kar sakte hain
-const allowedOrigins = [
-  'http://localhost:3000', // Localhost ke liye
-  'https://frontend-website-rip5.vercel.app/' // Vercel frontend ke liye
-];
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-app.use(cors({
-  origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-      } else {
-          callback(new Error('Not allowed by CORS'));
-      }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-
-// JSON parsing middleware
+// JSON parsing middlewares
 app.use(express.json());
 
 // Mongoose connection using environment variable (MONGO_URI must be set in Vercel)
@@ -48,13 +38,15 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("users", userSchema);
 //Hello mongo
 
-// API to fetch all users
 app.get("/", (req, res) => {
-  res.send("Hello World!");
-})
+  res.send("Hello World");
+});
 app.get("/auth/sign-up", (req, res) => {
-  res.send("Hello World! from sign-up");
-})
+  res.send("from sign-up");
+});
+
+
+// API to fetch all user
 app.get("/users", async (_req, res) => {
   try {
     const users = await User.find();
@@ -79,7 +71,7 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// API to register user(s)sujit
+// API to register user(s)
 app.post("/auth/sign-up", async (req, res) => {
   try {
     // Check if multiple users are sent as array
@@ -212,4 +204,4 @@ app.delete("/users/:id", async (req, res) => {
 
 app.listen(port, () => {
   console.log(`🚀 Server is running at http://localhost:${port}`);
-});  
+});
