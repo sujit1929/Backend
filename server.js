@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
+require("dotenv").config();  // ✅ dotenv import aur configure kiya
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,15 +20,13 @@ app.use(
 // JSON parsing middlewares
 app.use(express.json());
 
-// Mongoose connection using environment variable (MONGO_URI must be set in Vercel)
 
+// ✅ MongoDB Connection
 mongoose
-  .connect("mongodb+srv://Sujeet:mongo785999@cluster0.car0p.mongodb.net/?retryWrites=true&w=majority")
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ MongoDB Connection Error:", err));
 
-
-// Define User Schema
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 app.get("/auth/sign-up", (req, res) => {
-  res.send("from sign-up");
+  res.send("from sign-up from backend" );
 });
 
 
