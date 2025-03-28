@@ -50,7 +50,9 @@ app.get("/auth/login", (req, res) => {
   res.send("from login from backend" );
 });
 
-
+app.get("/users", (req, res) => {
+  res.send("from user details from backend" );
+}); 
 // API to fetch all user
 app.get("/users", async (_req, res) => {
   try {
