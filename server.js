@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 // CORS configuration: Aap production mein frontend URL update kar sakte hain
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL ,
     // origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
@@ -20,7 +20,8 @@ app.use(
 
 // JSON parsing middlewares
 app.use(express.json());
-
+const Api_URL =process.env.FRONTEND_URL
+console.log("forntend url",Api_URL)
 
 // ✅ MongoDB Connection
 mongoose
@@ -51,7 +52,7 @@ app.get("/auth/login", (req, res) => {
 });
 
 app.get("/users", (req, res) => {
-  res.send("from user details from backend" );
+  res.send("from user details from backend with users and me" );
 }); 
 // API to fetch all user
 app.get("/users", async (_req, res) => {
