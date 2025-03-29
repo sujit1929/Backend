@@ -29,7 +29,7 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ MongoDB Connection Error:", err));
   console.log("mongo uri",process.env.MONGO_URI)
-
+// hwow to create schema
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
