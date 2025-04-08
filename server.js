@@ -29,7 +29,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World from backend" );
 });
 
 app.listen(port, () => {
