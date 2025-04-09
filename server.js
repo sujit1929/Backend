@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-
+const postRoutes = require('./routes/post'); // <== Add this
 dotenv.config();
 const app = express();
 
@@ -27,9 +27,9 @@ app.use(express.json());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-
+app.use('/api/posts', postRoutes); // <== Register post route
 app.get("/", (req, res) => {
-  res.send("Hello World from backend" );
+  res.send("Hello World from backend with post apis" );
 });
 
 app.listen(port, () => {
