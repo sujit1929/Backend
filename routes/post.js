@@ -17,14 +17,17 @@ router.post('/', async (req, res) => {
   
 
 // ✅ Get all posts
+// Instead of '/posts', use '/'
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.find().populate('author', 'name email');
     res.json(posts);
   } catch (error) {
+    console.error(error); // Add console to catch issues
     res.status(500).json({ message: 'Failed to fetch posts', error });
   }
 });
+
 
 // ✅ Get a single post by ID
 router.get('/:id', async (req, res) => {
