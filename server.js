@@ -17,6 +17,7 @@ const port = process.env.PORT || 5000;
 // CORS configuration
 app.use(cors({
   origin: process.env.FRONTEND_URL,
+  // origin: "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -27,9 +28,9 @@ app.use(express.json());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use('/api/posts', postRoutes); // <== Register post route
+app.use('/api/posts', postRoutes);
 app.get("/", (req, res) => {
-  res.send("Hello World from backend with post apis" );
+  res.send("Hello World from backend with post apis with tenstack" );
 });
 
 app.listen(port, () => {
