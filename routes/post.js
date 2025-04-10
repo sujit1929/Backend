@@ -3,29 +3,25 @@ const router = express.Router();
 const Post = require('../models/Post');
 
 // ✅ Create a new post
-router.post('/', async (req, res) => {
-    try {
-      console.log('Incoming data:', req.body); // ✅
-      const post = new Post(req.body);
-      await post.save();
-      res.status(201).json({ message: 'Post created successfully', post });
-    } catch (error) {
-      console.error('Error saving post:', error); // ✅
-      res.status(500).json({ message: 'Failed to create post', error });
-    }
-  });
-  
-
-// ✅ Get all posts
-// Instead of '/posts', use '/'
-router.get('/', async (req, res) => {
+router.get('/post', async (req, res) => {
   try {
     const posts = await Post.find().populate('author', 'name email');
     res.json(posts);
   } catch (error) {
-    console.error(error); // Add console to catch issues
     res.status(500).json({ message: 'Failed to fetch posts', error });
   }
+});
+
+// ✅ CREATE new post
+router.post('/create-new-post', async (req, res) => {
+  try {
+    const post = new Post(req.body);
+    await post.save();
+    res.status(201).json({ message: 'Post created successfully', post });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create post', error });
+  }
+  
 });
 
 
