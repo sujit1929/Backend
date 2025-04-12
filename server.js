@@ -16,8 +16,7 @@ const port = process.env.PORT || 5000;
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL ,
-  // origin: process.env.LOCAL_URL,
+  origin: process.env.FRONTEND_URL ||process.env.LOCAL_URL,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -30,7 +29,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use('/', postRoutes);
 app.get("/", (req, res) => {
-  res.send("Hello World from backend with post apis with tenstack" );
+  res.send("Hello World from backend with post apis with tenstack fro url" );
 });
 
 app.listen(port, () => {
