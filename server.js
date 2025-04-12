@@ -15,11 +15,23 @@ connectDB();
 const port = process.env.PORT || 5000;
 
 // CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.LOCAL_URL
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL ||process.env.LOCAL_URL,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
 console.log(process.env.LOCAL_URL)
 // Middleware to parse JSON requests
 app.use(express.json());
