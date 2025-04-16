@@ -6,6 +6,8 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require('./routes/post'); // <== Add this
+const productRoutes = require('./routes/productRoutes');
+
 dotenv.config();
 const app = express();
 
@@ -22,6 +24,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
+    console.log("Origin:", origin);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -40,8 +43,9 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use('/', postRoutes);
+app.use('/api/products', productRoutes);
 app.get("/", (req, res) => {
-  res.send("Hello World from backend with post apis with tenstack fro url" );
+  res.send("Hello World from backend with Multer img" );
 });
 
 app.listen(port, () => {
